@@ -21,4 +21,8 @@ router.delete("/:hootId", hootCtrl.delete);
 
 router.post("/:hootId/comments", hootCtrl.createComment);
 
+router.put("/:hootId/comments/:commentId", hootCtrl.updateComment);
+
+router.delete("/:hootId/comments/:commentId", hootCtrl.deleteComment);
+
 module.exports = router;

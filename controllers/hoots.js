@@ -85,6 +85,38 @@ const createComment = async (req, res) => {
   }
 };
 
+const updateComment = async (req, res) => {
+  try {
+    const hoot = await Hoot.findById(req.params.hootId);
+    const comment = hoot.comments.id(req.params.commentId);
+    if (!comment.author.equals(req.user._id)) {
+      return res.status(403).send("Invalid Permissions");
+    }
+    comment.text = req.body.text;
+    await hoot.save();
+    res.status(200).json(comment);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
+const deleteComment = async (req, res) => {
+  try {
+    const hoot = await Hoot.findById(req.params.hootId);
+    const comment = hoot.comments.id(req.params.commentId);
+    if (!comment.author.equals(req.user._id)) {
+      return res.status(403).send("Invalid Permissions");
+    }
+    hoot.comments.remove({ _id: req.params.commentId });
+    await hoot.save();
+    res.status(200).json(comment);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
 module.exports = {
   create,
   index,
@@ -92,4 +124,6 @@ module.exports = {
   update,
   delete: deleteHoot,
   createComment,
+  updateComment,
+  deleteComment,
 };
